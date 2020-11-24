@@ -8,6 +8,7 @@ info:
     \ [App Store Connect](https://flutter.dev/) and [Google Play Store](https://play.google.com/console)\
     \ as well as basic data for instantiating a new application. \n"
   contact:
+    name: Arnold Arz von Straussenburg
     email: arnold.arz@uni-muenster.de
   license:
     name: Apache 2.0
