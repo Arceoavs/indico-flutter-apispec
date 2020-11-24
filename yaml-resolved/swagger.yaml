@@ -301,6 +301,79 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/android.Metadata'
+  /template:
+    get:
+      tags:
+      - Flutter
+      summary: Get a Flutter template for application scaffolding
+      description: Retrieve a git repository and basic information to scaffold a new
+        Flutter application and customize it
+      operationId: getFlutterTemplate
+      responses:
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+  /icon/{appId}:
+    get:
+      tags:
+      - Flutter
+      summary: Flutter app icon
+      description: The icon of the flutter app that is displayed on the users phone
+        screens
+      operationId: getFlutterIcon
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return app icon for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+  /logo/{appId}:
+    get:
+      tags:
+      - Flutter
+      summary: Client/ Event Logo
+      description: The logo of the client or the event to be displayed within the
+        application.
+      operationId: getClientLogo
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return client logo for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
 components:
   schemas:
     ios.Appfile:
@@ -473,9 +546,14 @@ components:
       properties:
         languages:
           type: array
-          description: All the languages that the apllication appears in
+          description: All the languages that the application appears in
           items:
             $ref: android.Metadata_languages
+    Template:
+      type: object
+      properties:
+        colors:
+          $ref: '#/components/schemas/Template_colors'
     ios.Metadata_review_information:
       type: object
       properties:
@@ -579,3 +657,52 @@ components:
             Store page
           example: www.youtube.com/example-video
       description: A language that the application is translated in
+    Template_colors:
+      type: object
+      properties:
+        primary_color:
+          type: string
+          description: Primary color of the app
+          example: 0x0000ff
+        primary_color_light:
+          type: string
+          description: Light version of the primary color of the app
+          example: 0x0000ff
+        secondary_color:
+          type: string
+          description: Secondary color of the app
+          example: 0x0000ff
+        secondary_color_light:
+          type: string
+          description: Light version of the secondary color of the app
+          example: 0x0000ff
+        accent_color:
+          type: string
+          description: Accent color of the app
+          example: 0x0000ff
+        info_color:
+          type: string
+          description: Information color of the app
+          example: 0x0000ff
+        warning_color:
+          type: string
+          description: Warning color of the app
+          example: 0x0000ff
+        error_color:
+          type: string
+          description: Error color of the app
+          example: 0x0000ff
+        success_color:
+          type: string
+          description: Success color of the app
+          example: 0x0000ff
+        background_color:
+          type: string
+          description: Background color of the app
+          example: 0x0000ff
+        background_color_dark:
+          type: string
+          description: Dark Background color of the app
+          example: 0x0000ff
+      description: The application colors, to make the application fit to the customers
+        corporate ID
