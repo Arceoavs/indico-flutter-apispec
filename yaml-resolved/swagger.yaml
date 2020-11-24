@@ -34,7 +34,7 @@ paths:
       summary: Get Appfile data by ID
       description: Basic information in the [Appfile](https://docs.fastlane.tools/advanced/Appfile/)
         that is used accross all fastlane tools
-      operationId: getAppfileDataById
+      operationId: getIosAppfileDataById
       parameters:
       - name: appId
         in: path
@@ -54,7 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Appfile'
+                $ref: '#/components/schemas/ios.Appfile'
   /ios/deliverfile/{appId}:
     get:
       tags:
@@ -62,11 +62,11 @@ paths:
       summary: Get Deliverfile data by ID
       description: Various App Store Connect metadata in the [Deliverfile](https://docs.fastlane.tools/actions/deliver/)
         accross all fastlane tools
-      operationId: getDeliverfileDataById
+      operationId: getIosDeliverfileDataById
       parameters:
       - name: appId
         in: path
-        description: ID of application to return appfile data for
+        description: ID of application to return deliverfile data for
         required: true
         style: simple
         explode: false
@@ -82,7 +82,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deliverfile'
+                $ref: '#/components/schemas/ios.Deliverfile'
   /ios/matchfile/{appId}:
     get:
       tags:
@@ -90,11 +90,11 @@ paths:
       summary: Get Matchfile data by ID
       description: Code signing information in the [Matchfile](https://docs.fastlane.tools/actions/match/)
         accross all fastlane tools
-      operationId: getMatchfileDataById
+      operationId: getIosMatchfileDataById
       parameters:
       - name: appId
         in: path
-        description: ID of application to return appfile data for
+        description: ID of application to return matchfile data for
         required: true
         style: simple
         explode: false
@@ -110,11 +110,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Matchfile'
-  /ios/snapfile/{appId}:
+                $ref: '#/components/schemas/ios.Matchfile'
+  /snapfile/{appId}:
     get:
       tags:
-      - iOS
+      - Flutter
       summary: Get Snapfile data by ID
       description: Device information in the [Snapfile](https://github.com/mmcc007/screenshots)
         to create automated Screenshots in UI test
@@ -122,7 +122,7 @@ paths:
       parameters:
       - name: appId
         in: path
-        description: ID of application to return appfile data for
+        description: ID of application to return snapfile data for
         required: true
         style: simple
         explode: false
@@ -145,7 +145,7 @@ paths:
       - iOS
       summary: Get metadata for app
       description: Metadata to be displayed in the App Store using fastlane [deliver](https://docs.fastlane.tools/actions/deliver/)
-      operationId: getMetadataById
+      operationId: getIosMetadataById
       parameters:
       - name: appId
         in: path
@@ -165,11 +165,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Metadata'
+                $ref: '#/components/schemas/ios.Metadata'
   /android/credentials:
     get:
       tags:
-      - iOS
+      - Android
       summary: Get credentials for the Google Play Console
       description: Access credentials to access the Google Play Console using the
         fastlane [supply](https://docs.fastlane.tools/actions/supply/) tool
@@ -181,9 +181,129 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GooglePlayConsoleCredentials'
+  /android/appfile/{appId}:
+    get:
+      tags:
+      - Android
+      summary: Get Appfile data by ID
+      description: Basic information in the [Appfile](https://docs.fastlane.tools/advanced/Appfile/)
+        that is used accross all fastlane tools
+      operationId: getAndroidAppfileDataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return appfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/android.Appfile'
+  /android/metadata/images/featureGraphic/{appId}:
+    get:
+      tags:
+      - Android
+      summary: Play Store Feature Graphic
+      description: The [Feature Graphic](https://support.google.com/googleplay/android-developer/answer/9866151?visit_id=637418368406807014-863193071&rd=1#feature_graphic_requirements)
+        for display in the Android Play Store. It is a 24-bit PNG or JPEG with the
+        dimensions 1024px by 500px
+      operationId: getAndroidFeatureGraphic
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return feature graphic for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+  /android/metadata/images/icon/{appId}:
+    get:
+      tags:
+      - Android
+      summary: Play Store App Icon
+      description: The [Application Icon](https://developer.android.com/google-play/resources/icon-design-specifications)
+        for display in the Android Play Store. It is a 32-bit PNG, sRGB color space
+        with the dimensions 512px by 512px. The max file size is 1024kb
+      operationId: getAndroidIcon
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return app icon for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+  /android/metadata/{appId}:
+    get:
+      tags:
+      - Android
+      summary: Get Metadata by ID
+      description: Basic metadata information used by the fastlane [supply](https://docs.fastlane.tools/actions/supply/)
+        tool
+      operationId: getAndroidMetadataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return metadata for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/android.Metadata'
 components:
   schemas:
-    Appfile:
+    ios.Appfile:
       type: object
       properties:
         app_name:
@@ -205,7 +325,7 @@ components:
           type: string
           description: Build context path on the CI system
           example: /Users/builder/hello_world
-    Deliverfile:
+    ios.Deliverfile:
       type: object
       properties:
         languages:
@@ -225,7 +345,7 @@ components:
           description: The [price tier](https://help.apple.com/app-store-connect/#/dev9fc06e23d)
             in App Store connect
           example: 0
-    Matchfile:
+    ios.Matchfile:
       type: object
       properties:
         app_identifier:
@@ -252,31 +372,7 @@ components:
           type: string
           description: App store connect user e-mail address
           example: user@example.com
-    Snapfile:
-      type: object
-      properties:
-        devices:
-          type: array
-          description: List of devices that the UI test should run on
-          example:
-          - iPhone 8
-          - iPhone 8 Plus
-          - iPhone SE
-          - iPhone X
-          - iPad Pro (12.9-inch)
-          - iPad Pro (9.7-inch)
-          - Apple TV 1080p
-          items:
-            type: string
-        languages:
-          type: array
-          description: List of languages that are supported
-          example:
-          - en-US
-          - de-DE
-          items:
-            type: string
-    Metadata:
+    ios.Metadata:
       type: object
       properties:
         copyright:
@@ -312,11 +408,35 @@ components:
             Probably empty if not a game
           example: ""
         review_information:
-          $ref: '#/components/schemas/Metadata_review_information'
+          $ref: '#/components/schemas/ios.Metadata_review_information'
         languages:
           type: array
           items:
-            $ref: '#/components/schemas/Metadata_languages'
+            $ref: ios.Metadata_languages
+    Snapfile:
+      type: object
+      properties:
+        devices:
+          type: array
+          description: List of devices that the UI test should run on
+          example:
+          - iPhone 8
+          - iPhone 8 Plus
+          - iPhone SE
+          - iPhone X
+          - iPad Pro (12.9-inch)
+          - iPad Pro (9.7-inch)
+          - Apple TV 1080p
+          items:
+            type: string
+        languages:
+          type: array
+          description: List of languages that are supported
+          example:
+          - en-US
+          - de-DE
+          items:
+            type: string
     GooglePlayConsoleCredentials:
       type: object
       properties:
@@ -341,7 +461,22 @@ components:
         client_x509_cert_url:
           type: string
       description: JSON Token to access the Google Play Console API
-    Metadata_review_information:
+    android.Appfile:
+      type: object
+      properties:
+        package_name:
+          type: string
+          description: The application bundle IDs in reverse domain format
+          example: '["berlin.arz.flutter.helloworld"]'
+    android.Metadata:
+      type: object
+      properties:
+        languages:
+          type: array
+          description: All the languages that the apllication appears in
+          items:
+            $ref: android.Metadata_languages
+    ios.Metadata_review_information:
       type: object
       properties:
         demo_password:
@@ -372,7 +507,7 @@ components:
           type: string
           description: Phone number for code review
           example: +49 12345678
-    Metadata_languages:
+    ios.Metadata_languages:
       type: object
       properties:
         id:
@@ -419,3 +554,28 @@ components:
           type: string
           description: URL for support from the developer
           example: www.example.com/support
+    android.Metadata_languages:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Language-Country identifier
+          example: en-US
+        full_description:
+          type: string
+          description: Full description text for the Google Play Store
+          example: A hello World application that does marvellous things
+        short_description:
+          type: string
+          description: A shorter description for the Google Play Store
+          example: Hello World application in short
+        title:
+          type: string
+          description: The application title in the Google Play Store
+          example: Hello World App
+        video:
+          type: string
+          description: URL to a promotional video to be displayed on the Google Play
+            Store page
+          example: www.youtube.com/example-video
+      description: A language that the application is translated in
