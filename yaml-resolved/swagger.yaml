@@ -138,6 +138,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Snapfile'
+  /metadata/{appId}:
+    get:
+      tags:
+      - iOS
+      summary: Get metadata for app
+      description: Metadata to be displayed in the App Store using fastlane [deliver](https://docs.fastlane.tools/actions/deliver/)
+      operationId: getMetadataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return appfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metadata'
 components:
   schemas:
     Appfile:
@@ -233,3 +260,122 @@ components:
           - de-DE
           items:
             type: string
+    Metadata:
+      type: object
+      properties:
+        copyright:
+          type: string
+          description: Copyright information
+          example: Copyright 2020-2021 Max Mustermann
+        primary_category:
+          type: string
+          description: Primary [App Store Category](https://developer.apple.com/app-store/categories/)
+          example: Productivity
+        primary_first_sub_category:
+          type: string
+          description: Primary first [App Store Sub-Category](https://developer.apple.com/app-store/categories/).
+            Probably empty if not a game
+          example: ""
+        primary_second_sub_category:
+          type: string
+          description: Primary second [App Store Sub-Category](https://developer.apple.com/app-store/categories/).
+            Probably empty if not a game
+          example: ""
+        secondary_category:
+          type: string
+          description: Secondary [App Store Category](https://developer.apple.com/app-store/categories/)
+          example: Education
+        secondary_first_sub_category:
+          type: string
+          description: Secondary first [App Store Sub-Category](https://developer.apple.com/app-store/categories/).
+            Probably empty if not a game
+          example: ""
+        secondary_second_sub_category:
+          type: string
+          description: Secondary second [App Store Sub-Category](https://developer.apple.com/app-store/categories/).
+            Probably empty if not a game
+          example: ""
+        review_information:
+          $ref: '#/components/schemas/Metadata_review_information'
+        languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata_languages'
+    Metadata_review_information:
+      type: object
+      properties:
+        demo_password:
+          type: string
+          description: Password for the demo user for code review
+          example: "123456"
+        demo_user:
+          type: string
+          description: Username for the demo user for code review
+          example: User123
+        email_address:
+          type: string
+          description: E-Mail address for contact in code review
+          example: user@example.com
+        first_name:
+          type: string
+          description: First name for code review
+          example: Max
+        last_name:
+          type: string
+          description: Last name for code review
+          example: Mustermann
+        notes:
+          type: string
+          description: Notes for code review
+          example: Use the big blue button to do big blue things
+        phone_number:
+          type: string
+          description: Phone number for code review
+          example: +49 12345678
+    Metadata_languages:
+      type: object
+      properties:
+        id:
+          type: string
+          description: language identifier
+          example: en-US
+        apple_tv_privacy_policy:
+          type: string
+          description: Privacy policy for apple TV apps
+          example: ""
+        description:
+          type: string
+          description: App Store description
+          example: This app does things. Sometimes even well.
+        keywords:
+          type: string
+          description: Comma-separated keywords list
+          example: hello, world, fluter, indico
+        marketing_url:
+          type: string
+          description: URL to the marketing website
+          example: www.example.com/marketing
+        name:
+          type: string
+          description: Application name in the App Store
+          example: Hello World App
+        privacy_url:
+          type: string
+          description: URL to the privacy policy of the developer
+          example: www.example.com/privacy
+        promotional_text:
+          type: string
+          description: Promotional text for App Store promotions
+          example: This app is really good. Trust me
+        release_notes:
+          type: string
+          description: Release notes for the application
+          example: Bug fixes
+        subtitle:
+          type: string
+          description: Subtitle for the application in the App Store
+          example: Virtual events
+        support_url:
+          type: string
+          description: URL for support from the developer
+          example: www.example.com/support
