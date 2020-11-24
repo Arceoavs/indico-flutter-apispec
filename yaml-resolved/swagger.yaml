@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Swagger Petstore
+  title: Indico Fastlane Integration
   description: "This is a draft for a REST API to be provided by an [Indico](https://indico.cern.ch/)\
     \ plugin. The API will be consumed by a [fastlane](https://docs.fastlane.tools/)\
     \ environment to provide continuous delivery of [Flutter](https://flutter.dev/)\
@@ -31,7 +31,8 @@ paths:
       tags:
       - iOS
       summary: Get Appfile data by ID
-      description: Blabla
+      description: Basic information in the [Appfile](https://docs.fastlane.tools/advanced/Appfile/)
+        that is used accross all fastlane tools
       operationId: getAppfileDataById
       parameters:
       - name: appId
@@ -53,6 +54,62 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Appfile'
+  /deliverfile/{appId}:
+    get:
+      tags:
+      - iOS
+      summary: Get Deliverfile data by ID
+      description: Various App Store Connect metadata in the [Deliverfile](https://docs.fastlane.tools/actions/deliver/)
+        accross all fastlane tools
+      operationId: getDeliverfileDataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return appfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deliverfile'
+  /matchfile/{appId}:
+    get:
+      tags:
+      - iOS
+      summary: Get Matchfile data by ID
+      description: Code signing information in the [Matchfile](https://docs.fastlane.tools/actions/match/)
+        accross all fastlane tools
+      operationId: getMatchfileDataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return appfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Matchfile'
 components:
   schemas:
     Appfile:
@@ -77,3 +134,50 @@ components:
           type: string
           description: Build context path on the CI system
           example: /Users/builder/hello_world
+    Deliverfile:
+      type: object
+      properties:
+        languages:
+          type: array
+          description: List of languages that are supported
+          example:
+          - en-US
+          - de-DE
+          items:
+            type: string
+        username:
+          type: string
+          description: App store connect user e-mail address
+          example: user@example.com
+        price_tier:
+          type: integer
+          description: The [price tier](https://help.apple.com/app-store-connect/#/dev9fc06e23d)
+            in App Store connect
+          example: 0
+    Matchfile:
+      type: object
+      properties:
+        app_identifier:
+          type: array
+          description: The application bundle IDs in reverse domain format
+          example:
+          - berlin.arz.flutter.helloworld
+          items:
+            type: string
+        storage_mode:
+          type: string
+          description: Storage mode of code signing credentials
+          example: git
+        git_url:
+          type: string
+          description: URL to (private) git repository to retrieve appstore profile
+            information
+          example: https://github.com/User/repository
+        type:
+          type: string
+          description: The default type, can be adhoc, enterprise or development
+          example: appstore
+        username:
+          type: string
+          description: App store connect user e-mail address
+          example: user@example.com
