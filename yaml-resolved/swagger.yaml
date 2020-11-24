@@ -27,7 +27,7 @@ tags:
 - name: Flutter
   description: Basic information used for instanciating a new Flutter application
 paths:
-  /appfile/{appId}:
+  /ios/appfile/{appId}:
     get:
       tags:
       - iOS
@@ -55,7 +55,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Appfile'
-  /deliverfile/{appId}:
+  /ios/deliverfile/{appId}:
     get:
       tags:
       - iOS
@@ -83,7 +83,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Deliverfile'
-  /matchfile/{appId}:
+  /ios/matchfile/{appId}:
     get:
       tags:
       - iOS
@@ -111,7 +111,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Matchfile'
-  /snapfile/{appId}:
+  /ios/snapfile/{appId}:
     get:
       tags:
       - iOS
@@ -139,7 +139,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Snapfile'
-  /metadata/{appId}:
+  /ios/metadata/{appId}:
     get:
       tags:
       - iOS
@@ -166,6 +166,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Metadata'
+  /android/credentials:
+    get:
+      tags:
+      - iOS
+      summary: Get credentials for the Google Play Console
+      description: Access credentials to access the Google Play Console using the
+        fastlane [supply](https://docs.fastlane.tools/actions/supply/) tool
+      operationId: getGooglePlayCredentials
+      responses:
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GooglePlayConsoleCredentials'
 components:
   schemas:
     Appfile:
@@ -302,6 +317,30 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Metadata_languages'
+    GooglePlayConsoleCredentials:
+      type: object
+      properties:
+        type:
+          type: string
+        project_id:
+          type: string
+        private_key_id:
+          type: string
+        private_key:
+          type: string
+        client_email:
+          type: string
+        client_id:
+          type: string
+        auth_uri:
+          type: string
+        token_uri:
+          type: string
+        auth_provider_x509_cert_url:
+          type: string
+        client_x509_cert_url:
+          type: string
+      description: JSON Token to access the Google Play Console API
     Metadata_review_information:
       type: object
       properties:
