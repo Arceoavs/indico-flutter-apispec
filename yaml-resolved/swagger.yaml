@@ -1,0 +1,729 @@
+openapi: 3.0.0
+info:
+  title: Indico Fastlane Integration
+  description: "This is a draft for a REST API to be provided by an [Indico](https://indico.cern.ch/)\
+    \ plugin. The API will be consumed by a [fastlane](https://docs.fastlane.tools/)\
+    \ environment to provide continuous delivery of [Flutter](https://flutter.dev/)\
+    \ applications. It provides metadata for distribution in the Apple App Store via\
+    \ [App Store Connect](https://flutter.dev/) and [Google Play Store](https://play.google.com/console)\
+    \ as well as basic data for instantiating a new application. \n"
+  contact:
+    name: Arnold Arz von Straussenburg
+    email: arnold.arz@uni-muenster.de
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/Arceoavs/indico-fastlane/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: iOS
+  description: Basic information used by the fastlane tools for delivery to App Store
+    Connect
+- name: Android
+  description: Basic information used by the fastlane tools for delivery to the Google
+    Play Console
+- name: Flutter
+  description: Basic information used for instanciating a new Flutter application
+paths:
+  /ios/appfile/{appId}:
+    get:
+      tags:
+      - iOS
+      summary: Get Appfile data by ID
+      description: Basic information in the [Appfile](https://docs.fastlane.tools/advanced/Appfile/)
+        that is used accross all fastlane tools
+      operationId: getIosAppfileDataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return appfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ios.Appfile'
+  /ios/deliverfile/{appId}:
+    get:
+      tags:
+      - iOS
+      summary: Get Deliverfile data by ID
+      description: Various App Store Connect metadata in the [Deliverfile](https://docs.fastlane.tools/actions/deliver/)
+        accross all fastlane tools
+      operationId: getIosDeliverfileDataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return deliverfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ios.Deliverfile'
+  /ios/matchfile/{appId}:
+    get:
+      tags:
+      - iOS
+      summary: Get Matchfile data by ID
+      description: Code signing information in the [Matchfile](https://docs.fastlane.tools/actions/match/)
+        accross all fastlane tools
+      operationId: getIosMatchfileDataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return matchfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ios.Matchfile'
+  /snapfile/{appId}:
+    get:
+      tags:
+      - Flutter
+      summary: Get Snapfile data by ID
+      description: Device information in the [Snapfile](https://github.com/mmcc007/screenshots)
+        to create automated Screenshots in UI test
+      operationId: getSnapfileDataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return snapfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snapfile'
+  /ios/metadata/{appId}:
+    get:
+      tags:
+      - iOS
+      summary: Get metadata for app
+      description: Metadata to be displayed in the App Store using fastlane [deliver](https://docs.fastlane.tools/actions/deliver/)
+      operationId: getIosMetadataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return appfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ios.Metadata'
+  /android/credentials:
+    get:
+      tags:
+      - Android
+      summary: Get credentials for the Google Play Console
+      description: Access credentials to access the Google Play Console using the
+        fastlane [supply](https://docs.fastlane.tools/actions/supply/) tool
+      operationId: getGooglePlayCredentials
+      responses:
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GooglePlayConsoleCredentials'
+  /android/appfile/{appId}:
+    get:
+      tags:
+      - Android
+      summary: Get Appfile data by ID
+      description: Basic information in the [Appfile](https://docs.fastlane.tools/advanced/Appfile/)
+        that is used accross all fastlane tools
+      operationId: getAndroidAppfileDataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return appfile data for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/android.Appfile'
+  /android/metadata/images/featureGraphic/{appId}:
+    get:
+      tags:
+      - Android
+      summary: Play Store Feature Graphic
+      description: The [Feature Graphic](https://support.google.com/googleplay/android-developer/answer/9866151?visit_id=637418368406807014-863193071&rd=1#feature_graphic_requirements)
+        for display in the Android Play Store. It is a 24-bit PNG or JPEG with the
+        dimensions 1024px by 500px
+      operationId: getAndroidFeatureGraphic
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return feature graphic for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+  /android/metadata/images/icon/{appId}:
+    get:
+      tags:
+      - Android
+      summary: Play Store App Icon
+      description: The [Application Icon](https://developer.android.com/google-play/resources/icon-design-specifications)
+        for display in the Android Play Store. It is a 32-bit PNG, sRGB color space
+        with the dimensions 512px by 512px. The max file size is 1024kb
+      operationId: getAndroidIcon
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return app icon for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+  /android/metadata/{appId}:
+    get:
+      tags:
+      - Android
+      summary: Get Metadata by ID
+      description: Basic metadata information used by the fastlane [supply](https://docs.fastlane.tools/actions/supply/)
+        tool
+      operationId: getAndroidMetadataById
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return metadata for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/android.Metadata'
+  /template:
+    get:
+      tags:
+      - Flutter
+      summary: Get a Flutter template for application scaffolding
+      description: Retrieve a git repository and basic information to scaffold a new
+        Flutter application and customize it
+      operationId: getFlutterTemplate
+      responses:
+        "200":
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+  /icon/{appId}:
+    get:
+      tags:
+      - Flutter
+      summary: Flutter app icon
+      description: The icon of the flutter app that is displayed on the users phone
+        screens
+      operationId: getFlutterIcon
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return app icon for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+  /logo/{appId}:
+    get:
+      tags:
+      - Flutter
+      summary: Client/ Event Logo
+      description: The logo of the client or the event to be displayed within the
+        application.
+      operationId: getClientLogo
+      parameters:
+      - name: appId
+        in: path
+        description: ID of application to return client logo for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Application not found
+        "200":
+          description: operation successful
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+components:
+  schemas:
+    ios.Appfile:
+      type: object
+      properties:
+        app_name:
+          type: string
+          description: "The name of the Flutter application. \n##### Scope: \nEvent\n"
+          example: Flutter Hello World App
+        app_identifier:
+          type: array
+          description: "The application bundle IDs in reverse domain format\n#####\
+            \ Scope: \nEvent\n"
+          example:
+          - berlin.arz.flutter.helloworld
+          items:
+            type: string
+        username:
+          type: string
+          description: "App store connect user e-mail address\n##### Scope: \nGlobal\n"
+          example: user@example.com
+        path_on_ci:
+          type: string
+          description: "Build context path on the CI system\n##### Scope: \nGlobal\n"
+          example: /Users/builder/hello_world
+    ios.Deliverfile:
+      type: object
+      properties:
+        languages:
+          type: array
+          description: "List of languages that are supported\n##### Scope: \nEvent\n"
+          example:
+          - en-US
+          - de-DE
+          items:
+            type: string
+        username:
+          type: string
+          description: "App store connect user e-mail address\n##### Scope: \nGlobal\n"
+          example: user@example.com
+        price_tier:
+          type: integer
+          description: "The [price tier](https://help.apple.com/app-store-connect/#/dev9fc06e23d)\
+            \ in App Store connect\n##### Scope: \nGlobal\n"
+          example: 0
+    ios.Matchfile:
+      type: object
+      properties:
+        app_identifier:
+          type: array
+          description: "The application bundle IDs in reverse domain format\n#####\
+            \ Scope: \nEvent\n"
+          example:
+          - berlin.arz.flutter.helloworld
+          items:
+            type: string
+        storage_mode:
+          type: string
+          description: "Storage mode of code signing credentials\n##### Scope: \n\
+            Global\n"
+          example: git
+        git_url:
+          type: string
+          description: "URL to (private) git repository to retrieve appstore profile\
+            \ information\n##### Scope: \nGlobal\n"
+          example: https://github.com/User/repository
+        type:
+          type: string
+          description: "The default type, can be adhoc, enterprise or development\n\
+            ##### Scope: \nGloabl\n"
+          example: appstore
+        username:
+          type: string
+          description: "App store connect user e-mail address\n##### Scope: \nGlobal\n"
+          example: user@example.com
+    ios.Metadata:
+      type: object
+      properties:
+        copyright:
+          type: string
+          description: "Copyright information\n##### Scope: \nGlobal\n"
+          example: Copyright 2020-2021 Max Mustermann
+        primary_category:
+          type: string
+          description: "Primary [App Store Category](https://developer.apple.com/app-store/categories/)\n\
+            ##### Scope: \nGlobal\n"
+          example: Productivity
+        primary_first_sub_category:
+          type: string
+          description: "Primary first [App Store Sub-Category](https://developer.apple.com/app-store/categories/).\
+            \ Probably empty if not a game\n##### Scope: \nGlobal\n"
+          example: ""
+        primary_second_sub_category:
+          type: string
+          description: "Primary second [App Store Sub-Category](https://developer.apple.com/app-store/categories/).\
+            \ Probably empty if not a game\n##### Scope: \nGlobal\n"
+          example: ""
+        secondary_category:
+          type: string
+          description: "Secondary [App Store Category](https://developer.apple.com/app-store/categories/)\n\
+            ##### Scope: \nGlobal\n"
+          example: Education
+        secondary_first_sub_category:
+          type: string
+          description: "Secondary first [App Store Sub-Category](https://developer.apple.com/app-store/categories/).\
+            \ Probably empty if not a game\n##### Scope: \nGlobal\n"
+          example: ""
+        secondary_second_sub_category:
+          type: string
+          description: "Secondary second [App Store Sub-Category](https://developer.apple.com/app-store/categories/).\
+            \ Probably empty if not a game\n##### Scope: \nEvent\n"
+          example: ""
+        review_information:
+          $ref: '#/components/schemas/ios.Metadata_review_information'
+        languages:
+          type: array
+          items:
+            $ref: ios.Metadata_languages
+    Snapfile:
+      type: object
+      properties:
+        devices:
+          type: array
+          description: "List of devices that the UI test should run on\n##### Scope:\
+            \ \nGlobal\n"
+          example:
+          - iPhone 8
+          - iPhone 8 Plus
+          - iPhone SE
+          - iPhone X
+          - iPad Pro (12.9-inch)
+          - iPad Pro (9.7-inch)
+          - Apple TV 1080p
+          items:
+            type: string
+        languages:
+          type: array
+          description: "List of languages that are supported\n##### Scope: \nEvent\n"
+          example:
+          - en-US
+          - de-DE
+          items:
+            type: string
+    GooglePlayConsoleCredentials:
+      type: object
+      properties:
+        type:
+          type: string
+        project_id:
+          type: string
+        private_key_id:
+          type: string
+        private_key:
+          type: string
+        client_email:
+          type: string
+        client_id:
+          type: string
+        auth_uri:
+          type: string
+        token_uri:
+          type: string
+        auth_provider_x509_cert_url:
+          type: string
+        client_x509_cert_url:
+          type: string
+      description: "JSON Token to access the Google Play Console API. This is generated\
+        \ in the Google Play Console and structured as such.\n##### Scope: \nEvent\n"
+    android.Appfile:
+      type: object
+      properties:
+        package_name:
+          type: string
+          description: "The application bundle IDs in reverse domain format\n#####\
+            \ Scope: \nEvent\n"
+          example: '["berlin.arz.flutter.helloworld"]'
+    android.Metadata:
+      type: object
+      properties:
+        languages:
+          type: array
+          description: "All the languages that the application appears in\n##### Scope:\
+            \ \nEvent\n"
+          items:
+            $ref: android.Metadata_languages
+    Template:
+      type: object
+      properties:
+        colors:
+          $ref: '#/components/schemas/Template_colors'
+      description: "Basic configuration for the fastlane pipeline to produce a new\
+        \ application\n##### Scope: \nEvent\n"
+    ios.Metadata_review_information:
+      type: object
+      properties:
+        demo_password:
+          type: string
+          description: "Password for the demo user for code review\n##### Scope: \n\
+            Global\n"
+          example: "123456"
+        demo_user:
+          type: string
+          description: "Username for the demo user for code review\n##### Scope: \n\
+            Global\n"
+          example: User123
+        email_address:
+          type: string
+          description: "E-Mail address for contact in code review\n##### Scope: \n\
+            Global\n"
+          example: user@example.com
+        first_name:
+          type: string
+          description: "First name for code review\n##### Scope: \nGlobal\n"
+          example: Max
+        last_name:
+          type: string
+          description: "Last name for code review\n##### Scope: \nGlobal\n"
+          example: Mustermann
+        notes:
+          type: string
+          description: "Notes for code review\n##### Scope: \nGlobal\n"
+          example: Use the big blue button to do big blue things
+        phone_number:
+          type: string
+          description: "Phone number for code review\n##### Scope: \nGlobal\n"
+          example: +49 12345678
+    ios.Metadata_languages:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "language identifier\n##### Scope: \nEvent\n"
+          example: en-US
+        apple_tv_privacy_policy:
+          type: string
+          description: "Privacy policy for apple TV apps\n##### Scope: \nGlobal\n"
+          example: ""
+        description:
+          type: string
+          description: "App Store description\n##### Scope: \nEvent\n"
+          example: This app does things. Sometimes even well.
+        keywords:
+          type: string
+          description: "Comma-separated keywords list\n##### Scope: \nEvent\n"
+          example: hello, world, fluter, indico
+        marketing_url:
+          type: string
+          description: "URL to the marketing website\n##### Scope: \nEvent\n"
+          example: www.example.com/marketing
+        name:
+          type: string
+          description: "Application name in the App Store\n##### Scope: \nEvent\n"
+          example: Hello World App
+        privacy_url:
+          type: string
+          description: "URL to the privacy policy of the developer\n##### Scope: \n\
+            Global\n"
+          example: www.example.com/privacy
+        promotional_text:
+          type: string
+          description: "Promotional text for App Store promotions\n##### Scope: \n\
+            Event\n"
+          example: This app is really good. Trust me
+        release_notes:
+          type: string
+          description: "Release notes for the application\n##### Scope: \nEvent\n"
+          example: Bug fixes
+        subtitle:
+          type: string
+          description: "Subtitle for the application in the App Store\n##### Scope:\
+            \ \nEvent\n"
+          example: Virtual events
+        support_url:
+          type: string
+          description: "URL for support from the developer\n##### Scope: \nGlobal\n"
+          example: www.example.com/support
+    android.Metadata_languages:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "Language-Country identifier\n##### Scope: \nEvent\n"
+          example: en-US
+        full_description:
+          type: string
+          description: "Full description text for the Google Play Store\n##### Scope:\
+            \ \nEvent\n"
+          example: A hello World application that does marvellous things
+        short_description:
+          type: string
+          description: "A shorter description for the Google Play Store\n##### Scope:\
+            \ \nEvent\n"
+          example: Hello World application in short
+        title:
+          type: string
+          description: "The application title in the Google Play Store\n##### Scope:\
+            \ \nEvent\n"
+          example: Hello World App
+        video:
+          type: string
+          description: "URL to a promotional video to be displayed on the Google Play\
+            \ Store page\n##### Scope: \nEvent\n"
+          example: www.youtube.com/example-video
+      description: A language that the application is translated in
+    Template_colors:
+      type: object
+      properties:
+        primary_color:
+          type: string
+          description: Primary color of the app
+          example: 0x0000ff
+        primary_color_light:
+          type: string
+          description: Light version of the primary color of the app
+          example: 0x0000ff
+        secondary_color:
+          type: string
+          description: Secondary color of the app
+          example: 0x0000ff
+        secondary_color_light:
+          type: string
+          description: Light version of the secondary color of the app
+          example: 0x0000ff
+        accent_color:
+          type: string
+          description: Accent color of the app
+          example: 0x0000ff
+        info_color:
+          type: string
+          description: Information color of the app
+          example: 0x0000ff
+        warning_color:
+          type: string
+          description: Warning color of the app
+          example: 0x0000ff
+        error_color:
+          type: string
+          description: Error color of the app
+          example: 0x0000ff
+        success_color:
+          type: string
+          description: Success color of the app
+          example: 0x0000ff
+        background_color:
+          type: string
+          description: Background color of the app
+          example: 0x0000ff
+        background_color_dark:
+          type: string
+          description: Dark Background color of the app
+          example: 0x0000ff
+      description: The application colors, to make the application fit to the customers
+        corporate ID
